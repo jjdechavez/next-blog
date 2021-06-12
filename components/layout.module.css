@@ -10,6 +10,13 @@
   align-items: center;
 }
 
+.profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+}
+
 .backToHome {
   margin: 3rem 0 0;
 }
