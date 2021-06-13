@@ -1,7 +1,10 @@
 import {Menu, MenuButton, Button, MenuList, Image, MenuItem} from '@chakra-ui/react'
 import {ChevronDownIcon, InfoOutlineIcon, ArrowBackIcon} from '@chakra-ui/icons'
+import nextCookies from 'next-cookies'
+import fetch from 'isomorphic-unfetch'
+import { logout, withAuthSync } from '../../lib/auth'
 
-export default function ProfileHeader() {
+function ProfileHeader() {
   return (
     <Menu>
       <MenuButton 
@@ -21,3 +24,20 @@ export default function ProfileHeader() {
     </Menu>
   )
 }
+
+ProfileHeader.getInitialProps = async (ctx) => {
+  const { token } = nextCookies(ctx)
+  try {
+    const response = await fetch(process.env.SERVER_HOST + '/users/info', {
+      credentials: 'include',
+      headers: {
+        authorization: JSON.stringify({ token })
+      }
+    })
+    console.log('response', await response.json())
+  } catch (error) {
+    return logout()
+  }
+}
+
+export default withAuthSync(ProfileHeader)

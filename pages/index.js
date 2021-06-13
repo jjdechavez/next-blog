@@ -5,7 +5,6 @@ import Date from '../components/date'
 import Login from '../components/Login'
 import utilStyles from '../styles/utils.module.css'
 
-import { getSortedPostsData } from '../lib/posts'
 import { withAuthSync } from '../lib/auth'
 
 // export async function getStaticProps() {
@@ -50,6 +49,7 @@ function Home() {
           <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
         </p>
       </section>
+      <Login />
     </Layout>
   )
 }
