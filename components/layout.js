@@ -2,6 +2,9 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import {Container, Center} from '@chakra-ui/react'
+import ProfileHeader from './header/Profile'
+
 import styles from './layout.module.css'
 import utilStyles from '../styles/utils.module.css'
 
@@ -10,7 +13,7 @@ export const siteTitle = 'Jerald Sample Website'
 
 export default function Layout({ children, home }) {
   return (
-    <div className={styles.container}>
+    <Container maxW="container.md" mt="12" mb="16">
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <meta
@@ -26,19 +29,8 @@ export default function Layout({ children, home }) {
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <header className={styles.header}>
-        {home ? (
-          <div className={styles.profile}>
-            <Image
-              priority
-              src="/images/profile.jpg"
-              className={utilStyles.borderCircle}
-              height={25}
-              width={25}
-              alt={name}
-            />
-            <h1 className={utilStyles.headingXl}>{name}</h1>
-          </div>
+      <Center>
+        {home ? (<ProfileHeader />
         ) : (<>
           <Link href="/">
             <a>
@@ -58,7 +50,7 @@ export default function Layout({ children, home }) {
             </Link>
           </h2>
         </>)}
-      </header>
+      </Center>
       <main>{children}</main>
       {!home && (
         <div className={styles.backToHome}>
@@ -67,8 +59,20 @@ export default function Layout({ children, home }) {
           </Link>
         </div>
       )}
-    </div>
+    </Container>
   )
 }
 
 
+
+          // <div className={styles.profile}>
+          //   <Image
+          //     priority
+          //     src="/images/profile.jpg"
+          //     className={utilStyles.borderCircle}
+          //     height={25}
+          //     width={25}
+          //     alt={name}
+          //   />
+          //   <h1 className={utilStyles.headingXl}>{name}</h1>
+          // </div>
