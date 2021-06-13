@@ -9,11 +9,14 @@ import {
   Button,
   Heading,
   Text,
-  Box,
   useColorModeValue,
+  useAccordionDescendantsContext,
 } from '@chakra-ui/react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import fetch from 'isomorphic-unfetch'
+
+import { login } from '../lib/auth'
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string()
@@ -23,7 +26,6 @@ const LoginSchema = Yup.object().shape({
 })
 
 export default function SimpleCard() {
-  const [loading, setLoading] = useState(false)
   const [networkErrors, setNetwokErrors] = useState(false)
 
   return (
@@ -45,11 +47,27 @@ export default function SimpleCard() {
             password: ''
           }}
           validationSchema={LoginSchema}
-          onSubmit={(values, actions) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
+          onSubmit={async (values, actions) => {
+            try {
+              const response = await fetch("http://localhost:5000/users/login", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  username: values.username,
+                  password: values.password
+                })
+              })
+              const { token } = await response.json()
+              login({token})
+            } catch (error) {
+              console.error(
+                "You have an error in your code or there are network issues.",
+                error
+              )
+              setNetworkErrors(true)
+            } finally {
               actions.setSubmitting(false)
-            }, 1000)
+            }
           }}
         >
           {formik => (
@@ -57,8 +75,7 @@ export default function SimpleCard() {
               rounded={'lg'}
               bg={useColorModeValue('white', 'gray.700')}
               p={8}
-            >
-              <Stack spacing={4}>
+            > <Stack spacing={4}>
                 <Field as="input" name="username">
                   {({field, form}) => (
                     <FormControl id="username" isInvalid={form.errors.username && form.touched.username}>
@@ -91,6 +108,9 @@ export default function SimpleCard() {
           )}
         </Formik>
       </Stack>
+      {networkErrors && (
+        <Center>One of us is experiencing network errors 😞</Center>
+      )}
     </Flex>
   );
 }
