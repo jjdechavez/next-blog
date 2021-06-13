@@ -4,7 +4,10 @@ import {ChevronDownIcon, InfoOutlineIcon, ArrowBackIcon} from '@chakra-ui/icons'
 export default function ProfileHeader() {
   return (
     <Menu>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+      <MenuButton 
+        as={Button} 
+        rightIcon={<ChevronDownIcon />} 
+      >
         John Jerald De Chavez
       </MenuButton>
       <MenuList>
