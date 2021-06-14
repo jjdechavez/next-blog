@@ -1,14 +1,25 @@
 import Head from 'next/head'
 import Link from 'next/link'
-
-import {Container, Center} from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import {Container, Center, Button} from '@chakra-ui/react'
 import ProfileHeader from './header/Profile'
 
 import styles from './layout.module.css'
+import useUser from '../lib/useUser'
+import {getToken} from '../lib/auth'
 
 export const siteTitle = 'Blogs'
 
 export default function Layout({ children, home, profile }) {
+  const router = useRouter()
+  const token = getToken()
+  const [getUserLoading, getUserError, user] = useUser(token)
+
+  const redirectToLogin = () => router.push('/login')
+
+  const hasUserOnPage = user && !profile
+  const displayHeaderBtn = hasUserOnPage && <ProfileHeader profile={user} loading={getUserLoading} /> 
+
   return (
     <Container maxW="container.md" mt="12" mb="16">
       <Head>
@@ -27,7 +38,8 @@ export default function Layout({ children, home, profile }) {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <Center mb="12">
-        {!profile && <ProfileHeader />}
+        {displayHeaderBtn}
+        {!user && <Button onClick={() => router.push('/login')}>Login</Button>}
       </Center>
       <main>{children}</main>
       {!home && (

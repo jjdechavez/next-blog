@@ -2,49 +2,10 @@ import React from 'react'
 import Router from 'next/router'
 import {Menu, MenuButton, Button, MenuList, MenuItem} from '@chakra-ui/react'
 import {ChevronDownIcon, InfoOutlineIcon, ArrowBackIcon} from '@chakra-ui/icons'
-import fetch from 'isomorphic-unfetch'
-import jsCookie from 'js-cookie'
 import {logout} from '../../lib/auth'
 
-export default function ProfileHeader() {
-  const [user, setUser] = React.useState(null)
-  const [loading, setLoading] = React.useState(false)
-  const [error, setError] = React.useState(null)
-
-  React.useEffect(() => {
-    async function user() {
-      const token = jsCookie.get('token')
-
-      setUser(null)
-      setError(null)
-      setLoading(true)
-
-      try {
-        const response = await fetch('http://localhost:5000/users/info', {
-          credentials: 'include',
-          headers: {
-            authorization: token
-          }
-        })
-
-        if (response.ok) {
-          const user = await response.json()
-          setUser(user)
-        } 
-      } catch (error) {
-        console.log('error?')
-        console.error(error)
-        setError(error.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    user()
-  }, [])
-
+export default function ProfileHeader({ profile, loading }) {
   const logoutUser = () => {
-    setUser({})
     logout()
   }
 
@@ -52,9 +13,7 @@ export default function ProfileHeader() {
     Router.push('/profile')
   }
 
-  if (!user || error || loading) {
-    return <Button onClick={() => Router.push('/login')}>Login</Button>
-  }
+  if (loading || !profile) return <>Loading...</>
 
   return (
     <Menu>
@@ -62,7 +21,7 @@ export default function ProfileHeader() {
         as={Button} 
         rightIcon={<ChevronDownIcon />} 
       >
-        {user.name}
+        {profile.name}
       </MenuButton>
       <MenuList>
         <MenuItem minH="48px" icon={<InfoOutlineIcon />} onClick={goToProfile}>

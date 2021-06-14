@@ -1,16 +1,17 @@
 import React, {useState} from 'react'
+import Router from 'next/router'
 import {
   Flex,
   FormControl,
   FormLabel,
   Input,
   Stack,
-  Link,
   Button,
   Heading,
   Text,
   useColorModeValue,
   Center,
+  Link
 } from '@chakra-ui/react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
@@ -27,7 +28,6 @@ const LoginSchema = Yup.object().shape({
 
 export default function Login() {
   const [networkErrors, setNetworkErrors] = useState(false)
-  const [error, setError] = useState('')
 
   return (
     <Flex
@@ -39,7 +39,7 @@ export default function Login() {
         <Stack align={'center'}>
           <Heading fontSize={'4xl'}>Login to your account</Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
-            to enjoy all of our cool <Link color={'blue.400'}>blogs</Link> ✌️
+            to enjoy all of our cool <Link color={'blue.400'} onClick={() => Router.push('/')}>blogs</Link> ✌️
           </Text>
         </Stack>
         <Formik
@@ -122,6 +122,12 @@ export default function Login() {
         {networkErrors && (
           <Center>One of us is experiencing network errors 😞</Center>
         )}
+        <Center>
+          <Text fontSize={'md'} color={'gray.600'}>
+            Don't have an account yet? 
+            <Link color="blue.400" onClick={() => Router.push('/register')}> Register</Link>
+          </Text>
+        </Center>
       </Stack>
     </Flex>
   );
