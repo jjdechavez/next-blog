@@ -6,12 +6,10 @@ import fetch from 'isomorphic-unfetch'
 import jsCookie from 'js-cookie'
 import {logout} from '../../lib/auth'
 
-export default function ProfileHeader(props) {
+export default function ProfileHeader() {
   const [user, setUser] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState(null)
-
-  console.log('props: ', props)
 
   React.useEffect(() => {
     async function user() {
@@ -69,21 +67,3 @@ export default function ProfileHeader(props) {
     </Menu>
   )
 }
-
-// export async function getStaticProps(ctx) {
-//   try {
-//     const response = await fetch('http://localhost:5000/todos')
-//     console.log('response========', response)
-//     if (response.ok) {
-//       const data = await response.json()
-//       console.log('props: ', props)
-//       return {
-//         props: { data }
-//       }
-//     } else {
-//       return logout()
-//     }
-//   } catch (error) {
-//     return logout()
-//   }
-// }
