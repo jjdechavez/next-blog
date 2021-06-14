@@ -2,7 +2,6 @@ import Head from 'next/head'
 import Layout from '../../components/layout'
 import Date from '../../components/date'
 import utilStyles from '../../styles/utils.module.css'
-import { getAllPostIds, getPostData } from '../../lib/posts'
 import { Center } from '@chakra-ui/react'
 
 export default function Post({ blog }) {
