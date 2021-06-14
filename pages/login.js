@@ -112,7 +112,7 @@ export default function Login() {
                 </Field>
                 <Stack spacing={10}>
                   <Button type="submit" isLoading={formik.isSubmitting}>
-                    Sign in
+                    Login
                   </Button>
                 </Stack>
               </Stack>

@@ -1,21 +1,10 @@
 import Link from 'next/link'
 import Head from 'next/head'
+import fetch from 'isomorphic-unfetch'
 import Layout, { siteTitle } from '../components/layout'
 import Date from '../components/date'
-import Login from '../components/Login'
 import utilStyles from '../styles/utils.module.css'
-
-import { withAuthSync } from '../lib/auth'
-
-// export async function getStaticProps() {
-//   const allPostsData = getSortedPostsData();
-//   return {
-//     props: {
-//       allPostsData
-//     }
-//   }
-// }
-
+import { Heading, Center } from '@chakra-ui/react'
 
       // <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
       //   <h2 className={utilStyles.headingLg}>Blog</h2>
@@ -36,22 +25,52 @@ import { withAuthSync } from '../lib/auth'
       //   </ul>
       // </section>
 
-function Home() {
+function Home({ blogs }) {
+
   return (
     <Layout home>
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <section className={utilStyles.headingMd}>
-        <p>Hi my name is Jerald</p>
-        <p>
-          (This is a sample website - you’ll be building a site like this on{' '}
-          <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
-        </p>
+      <Center mb="16">
+        <Heading fontSize="7xl">BLOGS</Heading>
+      </Center>
+
+      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
+        <ul className={utilStyles.list}>
+          {blogs.map((post) => (
+            <li className={utilStyles.listItem} key={post._id}>
+              <Link href={`/posts/${post._id}`}>
+                <a>{post.name}</a>
+              </Link>
+              <br />
+              {post.description}
+              <br />
+              <small className={utilStyles.lightText}>
+                <Date dateString={post.createdAt} />
+              </small>
+            </li>
+          ))}
+        </ul>
       </section>
-      <Login />
     </Layout>
   )
 }
 
-export default withAuthSync(Home)
+export async function getStaticProps() {
+  try {
+    const response = await fetch('http://localhost:5000/todos')
+    const blogs = await response.json()
+    console.log('blogs: ', blogs)
+
+    return {
+      props: {
+        blogs
+      }
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export default Home
