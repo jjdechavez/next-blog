@@ -30,10 +30,9 @@ export default function ProfileHeader() {
         if (response.ok) {
           const user = await response.json()
           setUser(user)
-        } else {
-          logout()
-        }
+        } 
       } catch (error) {
+        console.log('error?')
         console.error(error)
         setError(error.message)
       } finally {

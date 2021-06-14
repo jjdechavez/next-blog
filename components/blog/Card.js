@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Link from 'next/link'
 import {
   Box,
   Center,
@@ -38,7 +38,9 @@ export default function BlogPost({ post, latest }) {
             fontFamily={'body'}
             isTruncated
           >
-            {post.name}
+            <Link href={`/blogs/${post._id}`}>
+              <a>{post.name}</a>
+            </Link>
           </Heading>
           <Text color={'gray.500'} noOfLines="2">
           {post.description}

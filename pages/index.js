@@ -4,24 +4,6 @@ import Layout, { siteTitle } from '../components/layout'
 import BlogPost from '../components/blog/Card'
 import { Heading, Center } from '@chakra-ui/react'
 
-      // <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-      //   <ul className={utilStyles.list}>
-      //     {blogs.map((post) => (
-      //       <li className={utilStyles.listItem} key={post._id}>
-      //         <Link href={`/posts/${post._id}`}>
-      //           <a>{post.name}</a>
-      //         </Link>
-      //         <br />
-      //         {post.description}
-      //         <br />
-      //         <small className={utilStyles.lightText}>
-      //           <Date dateString={post.createdAt} />
-      //         </small>
-      //       </li>
-      //     ))}
-      //   </ul>
-      // </section>
-
 function Home({ blogs }) {
 
   return (
