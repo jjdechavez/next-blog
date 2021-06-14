@@ -48,6 +48,10 @@ export default function ProfileHeader() {
     logout()
   }
 
+  const goToProfile = () => {
+    Router.push('/profile')
+  }
+
   if (!user || error || loading) {
     return <Button onClick={() => Router.push('/login')}>Login</Button>
   }
@@ -61,7 +65,7 @@ export default function ProfileHeader() {
         {user.name}
       </MenuButton>
       <MenuList>
-        <MenuItem minH="48px" icon={<InfoOutlineIcon />}>
+        <MenuItem minH="48px" icon={<InfoOutlineIcon />} onClick={goToProfile}>
           Profile
         </MenuItem>
         <MenuItem minH="40px" icon={<ArrowBackIcon />} onClick={logoutUser}>

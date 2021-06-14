@@ -8,7 +8,7 @@ import styles from './layout.module.css'
 
 export const siteTitle = 'Blogs'
 
-export default function Layout({ children, home }) {
+export default function Layout({ children, home, profile }) {
   return (
     <Container maxW="container.md" mt="12" mb="16">
       <Head>
@@ -27,7 +27,7 @@ export default function Layout({ children, home }) {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <Center mb="12">
-        <ProfileHeader />
+        {!profile && <ProfileHeader />}
       </Center>
       <main>{children}</main>
       {!home && (

@@ -17,7 +17,7 @@ export default function BlogPost({ post, latest }) {
       <Box
         w={'full'}
         bg={useColorModeValue('white', 'gray.900')}
-        boxShadow={'2xl'}
+        boxShadow={'xl'}
         rounded={'md'}
         p={6}
         overflow={'hidden'}>
