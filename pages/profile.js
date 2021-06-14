@@ -1,6 +1,7 @@
 import React from 'react'
 import Router from 'next/router'
 import useUser from '../lib/useUser'
+import useUserBlogs from '../lib/useUserBlogs'
 import Layout from '../components/layout'
 import BlogPost from '../components/blog/Card'
 import {getToken} from '../lib/auth'
@@ -10,18 +11,21 @@ import {
   Box,
   Center,
   Text,
+  Stack,
+  Button,
   useColorModeValue,
 } from '@chakra-ui/react';
 
-export default function Profile({ blogs }) {
+export default function Profile() {
   const token = getToken()
   const [getUserLoading, getUserError, user] = useUser(token);
+  const [getUserBlogsLoading, getUserBlogsError, blogs] = useUserBlogs(token);
 
-  if (getUserLoading || !user) {
+  if (getUserLoading || !user || getUserBlogsLoading, !blogs) {
     return <>Loading...</>
   }
 
-  if (getUserError) {
+  if (getUserError || getUserBlogsError) {
     Router.push('/login')
   }
 
@@ -59,6 +63,25 @@ export default function Profile({ blogs }) {
           <Text fontWeight={600} color={'gray.500'} mb={4}>
             @{user.username}
           </Text>
+          <Stack mt={8} direction={'row'} spacing={4}>
+            <Button
+              flex="1"
+              fontSize={'sm'}
+              rounded={'full'}
+              bg={'blue.400'}
+              color={'white'}
+              boxShadow={
+                '0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)'
+              }
+              _hover={{
+                bg: 'blue.500',
+              }}
+              _focus={{
+                bg: 'blue.500',
+              }}>
+              New Blog
+            </Button>
+          </Stack>
         </Box>
       </Center>
       {blogs.length > 0 && blogs.map((post, index) => (
@@ -66,19 +89,4 @@ export default function Profile({ blogs }) {
       ))}
     </Layout>
   );
-}
-
-export async function getStaticProps() {
-  try {
-    const response = await fetch('http://localhost:5000/todos')
-    const blogs = await response.json()
-
-    return {
-      props: {
-        blogs: blogs || []
-      }
-    }
-  } catch (error) {
-    console.error(error)
-  }
 }
