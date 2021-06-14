@@ -52,7 +52,7 @@ export default function BlogPost({ post, latest }) {
             alt={'Author'}
           />
           <Stack direction={'column'} spacing={0} fontSize={'sm'}>
-            <Text fontWeight={600}>Achim Rolle</Text>
+            <Text fontWeight={600}>{post.user.name}</Text>
             <Text color={'gray.500'}>
               <Date dateString={post.createdAt} /> · 6min read
             </Text>
