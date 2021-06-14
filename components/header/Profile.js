@@ -44,6 +44,11 @@ export default function ProfileHeader() {
     user()
   }, [])
 
+  const logoutUser = () => {
+    setUser({})
+    logout()
+  }
+
   if (!user || error || loading) {
     return <Button onClick={() => Router.push('/login')}>Login</Button>
   }
@@ -60,7 +65,7 @@ export default function ProfileHeader() {
         <MenuItem minH="48px" icon={<InfoOutlineIcon />}>
           Profile
         </MenuItem>
-        <MenuItem minH="40px" icon={<ArrowBackIcon />} onClick={logout}>
+        <MenuItem minH="40px" icon={<ArrowBackIcon />} onClick={logoutUser}>
           Logout
         </MenuItem>
         </MenuList>

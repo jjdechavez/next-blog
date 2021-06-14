@@ -34,7 +34,7 @@ function Home({ blogs }) {
       </Center>
 
       {blogs.map((post, index) => (
-        <BlogPost post={post} latest={index} />
+        <BlogPost post={post} latest={index} key={post._id} />
       ))}
     </Layout>
   )

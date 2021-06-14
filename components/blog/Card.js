@@ -35,10 +35,12 @@ export default function BlogPost({ post, latest }) {
           <Heading
             color={useColorModeValue('gray.700', 'white')}
             fontSize={'2xl'}
-            fontFamily={'body'}>
+            fontFamily={'body'}
+            isTruncated
+          >
             {post.name}
           </Heading>
-          <Text color={'gray.500'}>
+          <Text color={'gray.500'} noOfLines="2">
           {post.description}
           </Text>
         </Stack>
