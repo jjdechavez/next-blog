@@ -13,7 +13,7 @@ export default function BlogPostSkeletons({ noOfSkeletons = 5 }) {
   let numbers = Array(noOfSkeletons);
   for (let index = 0; index < numbers.length; index++) {
     skeletons.push(
-      <Center py={6}>
+      <Center py={6} key={index}>
         <Box
           w={'full'}
           boxShadow={'xl'}
