@@ -180,7 +180,7 @@ export default function BlogPost({ post, latest, ownerId, refetchBlogs, token })
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>New Blog</DrawerHeader>
+          <DrawerHeader>Edit Blog</DrawerHeader>
           <DrawerBody>
             <Formik
               initialValues={{
