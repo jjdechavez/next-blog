@@ -28,7 +28,7 @@ function Home({ blogs }) {
 
 export async function getStaticProps() {
   try {
-    const response = await fetch('http://localhost:5000/todos')
+    const response = await fetch(process.env.SERVER_HOST + '/blogs')
     const blogs = await response.json()
 
     return {

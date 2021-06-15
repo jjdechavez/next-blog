@@ -25,7 +25,7 @@ export default function Post({ blog }) {
 }
 
 export async function getStaticPaths() {
-  const res = await fetch('http://localhost:5000/todos')
+  const res = await fetch(process.env.SERVER_HOST + '/blogs')
   const blogs = await res.json()
 
   const paths = blogs.map(blog => ({
@@ -39,7 +39,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const res = await fetch(`http://localhost:5000/todos/${params.id}`)
+  const res = await fetch(`${process.env.SERVER_HOST}/blogs/${params.id}`)
   const blog = await res.json()
 
   return {
