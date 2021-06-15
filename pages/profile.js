@@ -59,7 +59,14 @@ export default function Profile() {
   const availableBlogs = blogs.length > 0
   const Blogs = () => availableBlogs 
     ? blogs.map((post, index) => (
-        <BlogPost post={post} latest={index} key={post._id} ownerId={user._id} />
+        <BlogPost 
+          post={post} 
+          latest={index} 
+          key={post._id} 
+          ownerId={user._id} 
+          refetchBlogs={refetchBlogs}
+          token={token}
+        />
       ))
   : <Center mt="10" color="gray.500"><Text fontSize="2xl">You don't any blogs right now, Try to create</Text></Center>
 

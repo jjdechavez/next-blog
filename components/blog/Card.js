@@ -12,12 +12,36 @@ import {
   MenuItem,
   IconButton,
   Flex,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  Input,
+  FormControl,
+  FormLabel,
+  Textarea,
+  Button,
   useColorModeValue,
+  useDisclosure
 } from '@chakra-ui/react';
 import { SettingsIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
+import * as Yup from 'yup'
 import Date from '../date'
 
-export default function BlogPost({ post, latest, ownerId }) {
+const CreateBlogSchema = Yup.object().shape({
+  name: Yup.string()
+    .required('Name is required'),
+  description: Yup.string()
+    .required('Description is required'),
+})
+
+export default function BlogPost({ post, latest, ownerId, refetchBlogs, token }) {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   return (
     <Center py={6}>
       <Box
@@ -50,7 +74,7 @@ export default function BlogPost({ post, latest, ownerId }) {
                     variant="outline"
                   />
                   <MenuList>
-                    <MenuItem icon={<EditIcon />}>
+                    <MenuItem icon={<EditIcon />} onClick={onOpen}>
                       Edit
                     </MenuItem>
                     <MenuItem icon={<DeleteIcon />}>
@@ -88,6 +112,95 @@ export default function BlogPost({ post, latest, ownerId }) {
           </Stack>
         </Stack>
       </Box>
+      <Drawer isOpen={isOpen} onClose={onClose} placement="bottom">
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>New Blog</DrawerHeader>
+          <DrawerBody>
+            <Formik
+              initialValues={{
+                name: post.name,
+                description: post.description
+              }}
+              validationSchema={CreateBlogSchema}
+              onSubmit={async (values, actions) => {
+                try {
+                  const response = await fetch(`http://localhost:5000/todos/${post._id}`, {
+                    method: 'PUT',
+                    headers: { 
+                      'Content-Type': 'application/json',
+                      authorization: token
+                    },
+                    body: JSON.stringify({
+                      name: values.name,
+                      description: values.description
+                    })
+                  })
+
+                  if (response.status === 200) {
+                    refetchBlogs(token)
+                    onClose()
+                  }  
+                  
+                  if (response.status === 500) {
+                    console.log("Create Blog failed")
+                    let error = new Error(response.statusText)
+                    error.response = response
+                    throw error
+                  }
+
+                } catch (error) {
+                  console.error(
+                    "You have an error in your code or there are network issues.",
+                    error
+                  )
+                } finally {
+                  actions.setSubmitting(false)
+                }
+              }}
+            >
+              {formik => (
+                <Form
+                  id="update-blog-form"
+                  rounded={'lg'}
+                  bg={useColorModeValue('white', 'gray.700')}
+                  p={8}
+                > <Stack spacing={4}>
+                    <Field as="input" name="name">
+                      {({field, form}) => (
+                        <FormControl id="name" isInvalid={form.errors.name && form.touched.name}>
+                          <FormLabel>Name</FormLabel>
+                          <Input {...field} />
+                          <ErrorMessage name="name">
+                            {msg => <Text fontSize="sm" pt="1.5" color="red.500">{msg}</Text>}
+                          </ErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field as="input" name="description">
+                      {({field, form}) => (
+                        <FormControl id="description" isInvalid={form.errors.description && form.touched.description}>
+                          <FormLabel>Description</FormLabel>
+                          <Textarea {...field} resize="vertical" />
+                          <ErrorMessage name="description">
+                            {msg => <Text fontSize="sm" pt="1.5" color="red.500">{msg}</Text>}
+                          </ErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  </Stack>
+                </Form>
+              )}
+            </Formik>
+          </DrawerBody>
+          <DrawerFooter>
+            <Button type="submit" form="update-blog-form">
+              Save
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </Center>
   );
 }
