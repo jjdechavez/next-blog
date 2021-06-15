@@ -49,6 +49,8 @@ export default function Login() {
           }}
           validationSchema={LoginSchema}
           onSubmit={async (values, actions) => {
+            setNetworkErrors(false)
+
             try {
               const response = await fetch("http://localhost:5000/users/login", {
                 method: 'POST',

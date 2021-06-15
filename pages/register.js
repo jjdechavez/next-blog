@@ -55,6 +55,8 @@ export default function Register() {
           validationSchema={RegisterSchema}
           onSubmit={async (values, actions) => {
             try {
+              setNetworkErrors(false)
+
               const response = await fetch("http://localhost:5000/users", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -64,7 +66,8 @@ export default function Register() {
                   password: values.password
                 })
               })
-              if (response.status === 200) {
+
+              if (response.status === 201) {
                 const { token } = await response.json();
                 register({ token });
               } else {
@@ -137,8 +140,7 @@ export default function Register() {
         )}
         <Center>
           <Text fontSize={'md'} color={'gray.600'}>
-            Have an account already? 
-            <Link color="blue.400" onClick={() => Router.push('/login')}> Login</Link>
+            Already have an account? <Link color="blue.400" onClick={() => Router.push('/login')}>Login</Link>
           </Text>
         </Center>
       </Stack>
