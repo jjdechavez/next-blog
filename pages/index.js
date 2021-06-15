@@ -18,7 +18,7 @@ function Home({ blogs }) {
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <Center mb="16">
+      <Center mb="10">
         <Heading fontSize="7xl" textTransform="capitalize">blogs</Heading>
       </Center>
       <Blogs />

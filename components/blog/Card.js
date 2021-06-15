@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import React from 'react'
 import {
   Box,
   Center,
@@ -24,6 +25,13 @@ import {
   FormLabel,
   Textarea,
   Button,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogCloseButton,
   useColorModeValue,
   useDisclosure
 } from '@chakra-ui/react';
@@ -41,6 +49,37 @@ const CreateBlogSchema = Yup.object().shape({
 
 export default function BlogPost({ post, latest, ownerId, refetchBlogs, token }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: isDeleteAlertOpen, onOpen: onDeleteAlertOpen, onClose: onDeleteAlertClose } = useDisclosure()
+  const cancelRef = React.useRef()
+
+  const deleteBlog = async (postId, token) => {
+    try {
+      const response = await fetch(`http://localhost:5000/todos/${postId}`, {
+        method: 'DELETE',
+        headers: { 
+          authorization: token
+        },
+      })
+
+      if (response.status === 200) {
+        refetchBlogs(token)
+        onClose()
+      }  
+      
+      if (response.status === 500) {
+        console.log("Create Blog failed")
+        let error = new Error(response.statusText)
+        error.response = response
+        throw error
+      }
+
+    } catch (error) {
+      console.error(
+        "You have an error in your code or there are network issues.",
+        error
+      )
+    }  
+  }
 
   return (
     <Center py={6}>
@@ -77,11 +116,36 @@ export default function BlogPost({ post, latest, ownerId, refetchBlogs, token })
                     <MenuItem icon={<EditIcon />} onClick={onOpen}>
                       Edit
                     </MenuItem>
-                    <MenuItem icon={<DeleteIcon />}>
+                    <MenuItem icon={<DeleteIcon />} onClick={onDeleteAlertOpen}>
                       Delete
                     </MenuItem>
                   </MenuList>
                 </Menu>
+                <AlertDialog
+                  motionPreset="slideInBottom"
+                  leastDestructiveRef={cancelRef}
+                  onClose={onDeleteAlertClose}
+                  isOpen={isDeleteAlertOpen}
+                  isCentered
+                >
+                  <AlertDialogOverlay />
+
+                  <AlertDialogContent>
+                    <AlertDialogHeader>Delete Blog</AlertDialogHeader>
+                    <AlertDialogCloseButton />
+                    <AlertDialogBody>
+                      Are you sure? You can't undo this action afterwards.
+                    </AlertDialogBody>
+                    <AlertDialogFooter>
+                      <Button ref={cancelRef} onClick={onDeleteAlertClose}>
+                        No
+                      </Button>
+                      <Button colorScheme="red" ml={3} onClick={() => deleteBlog(post._id, token)}>
+                        Yes
+                      </Button>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </Flex>
             )}
           </Flex>
