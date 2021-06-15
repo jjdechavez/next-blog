@@ -137,7 +137,7 @@ export default function Profile() {
               validationSchema={CreateBlogSchema}
               onSubmit={async (values, actions) => {
                 try {
-                  const response = await fetch("http://localhost:5000/blogs", {
+                  const response = await fetch(process.env.serverBaseURL + "/blogs", {
                     method: 'POST',
                     headers: { 
                       'Content-Type': 'application/json',

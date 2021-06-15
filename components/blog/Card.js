@@ -54,7 +54,7 @@ export default function BlogPost({ post, latest, ownerId, refetchBlogs, token })
 
   const deleteBlog = async (postId, token) => {
     try {
-      const response = await fetch(`http://localhost:5000/blogs/${postId}`, {
+      const response = await fetch(`${process.env.serverBaseURL}/blogs/${postId}`, {
         method: 'DELETE',
         headers: { 
           authorization: token
@@ -190,7 +190,7 @@ export default function BlogPost({ post, latest, ownerId, refetchBlogs, token })
               validationSchema={CreateBlogSchema}
               onSubmit={async (values, actions) => {
                 try {
-                  const response = await fetch(`http://localhost:5000/blogs/${post._id}`, {
+                  const response = await fetch(`${process.env.serverBaseURL}/blogs/${post._id}`, {
                     method: 'PUT',
                     headers: { 
                       'Content-Type': 'application/json',
