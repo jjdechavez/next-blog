@@ -62,7 +62,7 @@ export default function Login() {
               })
               if (response.status === 200) {
                 const { token } = await response.json();
-                login({ token }, values.remember);
+                login({ token });
               } else if (response.status === 404) {
                 actions.setFieldError('username', 'No such user exists');
               } else if (response.status === 401) {

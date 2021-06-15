@@ -29,6 +29,13 @@ export default function Profile() {
     Router.push('/login')
   }
 
+  const availableBlogs = blogs.length > 0
+  const Blogs = () => availableBlogs 
+    ? blogs.map((post, index) => (
+        <BlogPost post={post} latest={index} key={post._id} />
+      ))
+  : <Center mt="10" color="gray.500"><Text fontSize="2xl">You don't any blogs right now, Try to create</Text></Center>
+
   return (
     <Layout profile>
       <Center py={6}>
@@ -84,9 +91,7 @@ export default function Profile() {
           </Stack>
         </Box>
       </Center>
-      {blogs.length > 0 && blogs.map((post, index) => (
-        <BlogPost post={post} latest={index} key={post._id} />
-      ))}
+      <Blogs />
     </Layout>
   );
 }

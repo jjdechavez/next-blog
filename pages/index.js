@@ -2,9 +2,16 @@ import Head from 'next/head'
 import fetch from 'isomorphic-unfetch'
 import Layout, { siteTitle } from '../components/layout'
 import BlogPost from '../components/blog/Card'
-import { Heading, Center } from '@chakra-ui/react'
+import { Heading, Center, Text } from '@chakra-ui/react'
 
 function Home({ blogs }) {
+
+  const availableBlogs = blogs.length > 0
+  const Blogs = () => availableBlogs 
+    ? blogs.map((post, index) => (
+        <BlogPost post={post} latest={index} key={post._id} />
+      ))
+  : <Center><Text fontSize="2xl" color="gray.700">We don't have blogs right now</Text></Center>
 
   return (
     <Layout home>
@@ -14,10 +21,7 @@ function Home({ blogs }) {
       <Center mb="16">
         <Heading fontSize="7xl" textTransform="capitalize">blogs</Heading>
       </Center>
-
-      {blogs.map((post, index) => (
-        <BlogPost post={post} latest={index} key={post._id} />
-      ))}
+      <Blogs />
     </Layout>
   )
 }
