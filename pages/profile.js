@@ -59,7 +59,7 @@ export default function Profile() {
   const availableBlogs = blogs.length > 0
   const Blogs = () => availableBlogs 
     ? blogs.map((post, index) => (
-        <BlogPost post={post} latest={index} key={post._id} />
+        <BlogPost post={post} latest={index} key={post._id} ownerId={user._id} />
       ))
   : <Center mt="10" color="gray.500"><Text fontSize="2xl">You don't any blogs right now, Try to create</Text></Center>
 
@@ -77,6 +77,7 @@ export default function Profile() {
             size={'2xl'}
             src={'https://avatars0.githubusercontent.com/u/1164541?v=4'}
             alt={'Avatar Alt'}
+            name={user.name}
             mb={4}
             pos={'relative'}
             _after={{

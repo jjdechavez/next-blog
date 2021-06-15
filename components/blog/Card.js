@@ -6,12 +6,18 @@ import {
   Text,
   Stack,
   Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+  Flex,
   useColorModeValue,
 } from '@chakra-ui/react';
-
+import { SettingsIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons'
 import Date from '../date'
 
-export default function BlogPost({ post, latest }) {
+export default function BlogPost({ post, latest, ownerId }) {
   return (
     <Center py={6}>
       <Box
@@ -22,16 +28,39 @@ export default function BlogPost({ post, latest }) {
         p={6}
         overflow={'hidden'}>
         <Stack>
-          {latest === 0 && (
-            <Text
-              color={'green.500'}
-              textTransform={'uppercase'}
-              fontWeight={800}
-              fontSize={'sm'}
-              letterSpacing={1.1}>
-              Latest
-            </Text>
-          )}
+          <Flex justifyContent="space-between" alignItems="center">
+            {latest === 0 && (
+              <Text
+                color={'green.500'}
+                textTransform={'uppercase'}
+                fontWeight={800}
+                fontSize={'sm'}
+                letterSpacing={1.1}>
+                Latest
+              </Text>
+            )}
+            <span />
+            {post.user._id === ownerId && (
+              <Flex justifyContent="flex-end">
+                <Menu>
+                  <MenuButton
+                    as={IconButton}
+                    aria-label="Options"
+                    icon={<SettingsIcon />}
+                    variant="outline"
+                  />
+                  <MenuList>
+                    <MenuItem icon={<EditIcon />}>
+                      Edit
+                    </MenuItem>
+                    <MenuItem icon={<DeleteIcon />}>
+                      Delete
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              </Flex>
+            )}
+          </Flex>
           <Heading
             color={useColorModeValue('gray.700', 'white')}
             fontSize={'2xl'}
