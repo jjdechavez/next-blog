@@ -23,6 +23,7 @@ import {
   Input,
   FormControl,
   FormLabel,
+  Textarea,
   useColorModeValue,
   useDisclosure
 } from '@chakra-ui/react';
@@ -185,7 +186,7 @@ export default function Profile() {
                       {({field, form}) => (
                         <FormControl id="description" isInvalid={form.errors.description && form.touched.description}>
                           <FormLabel>Description</FormLabel>
-                          <Input {...field} />
+                          <Textarea {...field} resize="vertical" />
                           <ErrorMessage name="description">
                             {msg => <Text fontSize="sm" pt="1.5" color="red.500">{msg}</Text>}
                           </ErrorMessage>
