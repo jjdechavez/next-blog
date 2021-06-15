@@ -18,7 +18,9 @@ export default function Layout({ children, home, profile }) {
   const redirectToLogin = () => router.push('/login')
 
   const hasUserOnPage = user && !profile
-  const displayHeaderBtn = hasUserOnPage && <ProfileHeader profile={user} loading={getUserLoading} /> 
+  const displayHeaderBtn = hasUserOnPage 
+    ? <ProfileHeader profile={user} loading={getUserLoading} /> 
+    : !user && <Button onClick={() => router.push('/login')}>Login</Button>
 
   return (
     <Container maxW="container.md" mt="12" mb="16">
@@ -39,7 +41,6 @@ export default function Layout({ children, home, profile }) {
       </Head>
       <Center mb="12">
         {displayHeaderBtn}
-        {!user && <Button onClick={() => router.push('/login')}>Login</Button>}
       </Center>
       <main>{children}</main>
       {!home && (
