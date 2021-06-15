@@ -165,7 +165,7 @@ export default function BlogPost({ post, latest, ownerId, refetchBlogs, token })
         </Stack>
         <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
           <Avatar
-            src={'https://avatars0.githubusercontent.com/u/1164541?v=4'}
+            name={post.user.name}
             alt={'Author'}
           />
           <Stack direction={'column'} spacing={0} fontSize={'sm'}>

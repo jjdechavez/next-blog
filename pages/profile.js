@@ -82,7 +82,6 @@ export default function Profile() {
           textAlign={'center'}>
           <Avatar
             size={'2xl'}
-            src={'https://avatars0.githubusercontent.com/u/1164541?v=4'}
             alt={'Avatar Alt'}
             name={user.name}
             mb={4}
