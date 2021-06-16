@@ -8,5 +8,7 @@ const getUserBlogs = async () => {
 }
 
 export default function useUserBlogs() {
-  return useQuery('userBlogs', getUserBlogs)
+  return useQuery('userBlogs', getUserBlogs, {
+    refetchInterval: 1000
+  })
 }
