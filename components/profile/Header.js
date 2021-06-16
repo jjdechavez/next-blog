@@ -22,6 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import useCreateBlog from '../../hooks/useCreateBlog'
 
 const initialValues = {
   name: '',
@@ -35,8 +36,12 @@ const CreateBlogSchema = Yup.object().shape({
     .required('Description is required'),
 })
 
-export default function ProfileHeader({ user, token, refetchBlogs }) {
+export default function ProfileHeader({ user }) {
   const {isOpen, onOpen, onClose} = useDisclosure()
+  const { 
+    status: createBlogStatus, 
+    mutate: createBlog,
+  } = useCreateBlog(onClose)
 
   return (
     <>
@@ -103,40 +108,8 @@ export default function ProfileHeader({ user, token, refetchBlogs }) {
             <Formik
               initialValues={initialValues}
               validationSchema={CreateBlogSchema}
-              onSubmit={async (values, actions) => {
-                try {
-                  const response = await fetch(process.env.serverBaseURL + "/blogs", {
-                    method: 'POST',
-                    headers: { 
-                      'Content-Type': 'application/json',
-                      authorization: token
-                    },
-                    body: JSON.stringify({
-                      name: values.name,
-                      description: values.description
-                    })
-                  })
-
-                  if (response.status === 201) {
-                    refetchBlogs
-                    onClose()
-                  }  
-                  
-                  if (response.status === 500) {
-                    console.log("Create Blog failed")
-                    let error = new Error(response.statusText)
-                    error.response = response
-                    throw error
-                  }
-
-                } catch (error) {
-                  console.error(
-                    "You have an error in your code or there are network issues.",
-                    error
-                  )
-                } finally {
-                  actions.setSubmitting(false)
-                }
+              onSubmit={(values) => {
+                createBlog(values)
               }}
             >
               {formik => (
@@ -174,7 +147,7 @@ export default function ProfileHeader({ user, token, refetchBlogs }) {
             </Formik>
           </DrawerBody>
           <DrawerFooter>
-            <Button type="submit" form="create-blog-form">
+            <Button type="submit" form="create-blog-form" isLoading={createBlogStatus === "loading"}>
               Save
             </Button>
           </DrawerFooter>

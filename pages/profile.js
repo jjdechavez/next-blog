@@ -32,11 +32,7 @@ export default function Profile() {
     ? <ProfileHeaderSkeleton />
     : isUserError ? displayText(userError.message)
     : !user ? displayText("User does not exist")
-    : <ProfileHeader 
-        user={user} 
-        token={token} 
-        refetchBlogs={queryClient.invalidateQueries('userTodos')} 
-      />
+    : <ProfileHeader user={user} />
 
   let renderBlogs = null
 
