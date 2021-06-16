@@ -1,7 +1,6 @@
 import React from 'react'
 import Router from 'next/router'
 import useUser from '../lib/useUser'
-import useUserBlogs from '../lib/useUserBlogs'
 import Layout from '../components/layout'
 import BlogPost from '../components/blog/Card'
 import {getToken} from '../lib/auth'
@@ -29,6 +28,9 @@ import {
 } from '@chakra-ui/react';
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import useUserBlogs from '../hooks/useUserBlogs'
+import BlogPostSkeleton from '../components/blog/CardSkeleton'
+import { displayText } from '../components/utils'
 
 const initialValues = {
   name: '',
@@ -45,30 +47,39 @@ const CreateBlogSchema = Yup.object().shape({
 export default function Profile() {
   const token = getToken()
   const [getUserLoading, getUserError, user] = useUser(token);
-  const [getUserBlogsLoading, getUserBlogsError, blogs, {refetchBlogs}] = useUserBlogs(token);
+  // const [getUserBlogsLoading, getUserBlogsError, blogs, {refetchBlogs}] = useUserBlogs(token);
+  const {
+    isLoading: isUserBlogsLoading,
+    isError: isUserBlogsError,
+    error: userBlogsError,
+    data: blogs
+  } = useUserBlogs()
   const {isOpen, onOpen, onClose} = useDisclosure()
 
-  if (getUserLoading || !user || getUserBlogsLoading, !blogs) {
-    return <>Loading...</>
-  }
+  // if (getUserLoading || isLoading || !blogs) {
+  //   return <>Loading...</>
+  // }
 
-  if (getUserError || getUserBlogsError) {
-    Router.push('/login')
-  }
+  let renderBlogs = null;
 
-  const availableBlogs = blogs.length > 0
-  const Blogs = () => availableBlogs 
-    ? blogs.map((post, index) => (
+  renderBlogs = isUserBlogsLoading 
+    ? <BlogPostSkeleton noOfSkeletons={2} />
+    : isUserBlogsError ? displayText(userBlogsError.message)
+    : !blogs.length > 0 ? displayText("We don't have blogs right now")
+    : blogs.map((post, index) => (
         <BlogPost 
           post={post} 
           latest={index} 
-          key={post._id} 
+          key={post._id}
           ownerId={user._id} 
-          refetchBlogs={refetchBlogs}
+          refetchBlogs={() => console.log('refetch')}
           token={token}
         />
       ))
-  : <Center mt="10" color="gray.500"><Text fontSize="2xl">You don't any blogs right now, Try to create</Text></Center>
+
+  if (getUserError) {
+    Router.push('/login')
+  }
 
   return (
     <Layout profile>
@@ -212,7 +223,7 @@ export default function Profile() {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <Blogs />
+      {renderBlogs}
     </Layout>
   );
 }

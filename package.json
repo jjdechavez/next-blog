@@ -12,6 +12,7 @@
     "@chakra-ui/react": "^1.6.3",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "date-fns": "^2.20.0",
     "formik": "^2.2.9",
