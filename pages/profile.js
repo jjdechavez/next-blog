@@ -3,15 +3,12 @@ import { useQueryClient } from 'react-query'
 import Layout from '../components/layout'
 import BlogPost from '../components/blog/Card'
 import {getToken} from '../lib/auth'
-import {
-  useDisclosure
-} from '@chakra-ui/react';
 import useUserBlogs from '../hooks/useUserBlogs'
 import useUser from '../hooks/useUser'
 import BlogPostSkeleton from '../components/blog/CardSkeleton'
 import ProfileHeader from '../components/profile/Header'
+import ProfileHeaderSkeleton from '../components/profile/HeaderSkeleton'
 import { displayText } from '../components/utils'
-
 
 export default function Profile() {
   const queryClient  = useQueryClient()
@@ -32,7 +29,7 @@ export default function Profile() {
   let renderUserHeader = null
 
   renderUserHeader = isUserLoading 
-    ? <BlogPostSkeleton noOfSkeletons={2} />
+    ? <ProfileHeaderSkeleton />
     : isUserError ? displayText(userError.message)
     : !user ? displayText("User does not exist")
     : <ProfileHeader user={user} />
