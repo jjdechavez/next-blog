@@ -38,6 +38,8 @@ import {
 import { SettingsIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import useDeleteBlog from '../../hooks/useDeleteBlog'
+import useUpdateBlog from '../../hooks/useUpdateBlog'
 import Date from '../date'
 
 const CreateBlogSchema = Yup.object().shape({
@@ -50,36 +52,9 @@ const CreateBlogSchema = Yup.object().shape({
 export default function BlogPost({ post, latest, ownerId, refetchBlogs, token }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: isDeleteAlertOpen, onOpen: onDeleteAlertOpen, onClose: onDeleteAlertClose } = useDisclosure()
+  const { status: deleteBlogStatus, mutate: deleteBlog } = useDeleteBlog(onDeleteAlertClose)
+  const { isLoading: isUpdateBlogLoading, mutate: updateBlog } = useUpdateBlog(onClose)
   const cancelRef = React.useRef()
-
-  const deleteBlog = async (postId, token) => {
-    try {
-      const response = await fetch(`${process.env.serverBaseURL}/blogs/${postId}`, {
-        method: 'DELETE',
-        headers: { 
-          authorization: token
-        },
-      })
-
-      if (response.status === 200) {
-        refetchBlogs(token)
-        onClose()
-      }  
-      
-      if (response.status === 500) {
-        console.log("Create Blog failed")
-        let error = new Error(response.statusText)
-        error.response = response
-        throw error
-      }
-
-    } catch (error) {
-      console.error(
-        "You have an error in your code or there are network issues.",
-        error
-      )
-    }  
-  }
 
   return (
     <Center py={6}>
@@ -140,7 +115,7 @@ export default function BlogPost({ post, latest, ownerId, refetchBlogs, token })
                       <Button ref={cancelRef} onClick={onDeleteAlertClose}>
                         No
                       </Button>
-                      <Button colorScheme="red" ml={3} onClick={() => deleteBlog(post._id, token)}>
+                      <Button isLoading={deleteBlogStatus === "loading"} colorScheme="red" ml={3} onClick={() => deleteBlog(post._id)}>
                         Yes
                       </Button>
                     </AlertDialogFooter>
@@ -188,40 +163,8 @@ export default function BlogPost({ post, latest, ownerId, refetchBlogs, token })
                 description: post.description
               }}
               validationSchema={CreateBlogSchema}
-              onSubmit={async (values, actions) => {
-                try {
-                  const response = await fetch(`${process.env.serverBaseURL}/blogs/${post._id}`, {
-                    method: 'PUT',
-                    headers: { 
-                      'Content-Type': 'application/json',
-                      authorization: token
-                    },
-                    body: JSON.stringify({
-                      name: values.name,
-                      description: values.description
-                    })
-                  })
-
-                  if (response.status === 200) {
-                    refetchBlogs(token)
-                    onClose()
-                  }  
-                  
-                  if (response.status === 500) {
-                    console.log("Create Blog failed")
-                    let error = new Error(response.statusText)
-                    error.response = response
-                    throw error
-                  }
-
-                } catch (error) {
-                  console.error(
-                    "You have an error in your code or there are network issues.",
-                    error
-                  )
-                } finally {
-                  actions.setSubmitting(false)
-                }
+              onSubmit={(values) => {
+                updateBlog({ ...values, _id: post._id })
               }}
             >
               {formik => (
@@ -259,7 +202,7 @@ export default function BlogPost({ post, latest, ownerId, refetchBlogs, token })
             </Formik>
           </DrawerBody>
           <DrawerFooter>
-            <Button type="submit" form="update-blog-form">
+            <Button type="submit" form="update-blog-form" isLoading={isUpdateBlogLoading}>
               Save
             </Button>
           </DrawerFooter>

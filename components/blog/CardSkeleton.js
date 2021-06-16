@@ -7,7 +7,6 @@ import {
   SkeletonText
 } from '@chakra-ui/react';
 
-
 export default function BlogPostSkeletons({ noOfSkeletons = 5 }) {
   let skeletons = [];
   let numbers = Array(noOfSkeletons);

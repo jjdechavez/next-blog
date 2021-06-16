@@ -2,19 +2,10 @@ import Head from 'next/head'
 import Layout, { siteTitle } from '../components/layout'
 import BlogPost from '../components/blog/Card'
 import BlogPostSkeleton from '../components/blog/CardSkeleton'
-import { Heading, Center, Text } from '@chakra-ui/react'
+import { Heading, Center } from '@chakra-ui/react'
+import { displayText } from '../components/utils'
 
 import useBlogs from '../hooks/useBlogs'
-
-function displayText(text) {
-  return (
-  <Center>
-    <Text fontSize="2xl" color="gray.700">
-      {text}
-    </Text>
-  </Center>
-  )
-}
 
 function Home() {
   const { isLoading, isError, error, data: blogs } = useBlogs()
