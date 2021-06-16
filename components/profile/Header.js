@@ -35,7 +35,7 @@ const CreateBlogSchema = Yup.object().shape({
     .required('Description is required'),
 })
 
-export default function ProfileHeader({ user }) {
+export default function ProfileHeader({ user, token, refetchBlogs }) {
   const {isOpen, onOpen, onClose} = useDisclosure()
 
   return (
@@ -118,7 +118,7 @@ export default function ProfileHeader({ user }) {
                   })
 
                   if (response.status === 201) {
-                    refetchBlogs(token)
+                    refetchBlogs
                     onClose()
                   }  
                   

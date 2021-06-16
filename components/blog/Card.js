@@ -38,6 +38,7 @@ import {
 import { SettingsIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import useDeleteBlog from '../../hooks/useDeleteBlog'
 import Date from '../date'
 
 const CreateBlogSchema = Yup.object().shape({
@@ -50,36 +51,8 @@ const CreateBlogSchema = Yup.object().shape({
 export default function BlogPost({ post, latest, ownerId, refetchBlogs, token }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: isDeleteAlertOpen, onOpen: onDeleteAlertOpen, onClose: onDeleteAlertClose } = useDisclosure()
+  const { status: deleteBlogStatus, mutate: deleteBlog } = useDeleteBlog(onDeleteAlertClose)
   const cancelRef = React.useRef()
-
-  const deleteBlog = async (postId, token) => {
-    try {
-      const response = await fetch(`${process.env.serverBaseURL}/blogs/${postId}`, {
-        method: 'DELETE',
-        headers: { 
-          authorization: token
-        },
-      })
-
-      if (response.status === 200) {
-        refetchBlogs(token)
-        onClose()
-      }  
-      
-      if (response.status === 500) {
-        console.log("Create Blog failed")
-        let error = new Error(response.statusText)
-        error.response = response
-        throw error
-      }
-
-    } catch (error) {
-      console.error(
-        "You have an error in your code or there are network issues.",
-        error
-      )
-    }  
-  }
 
   return (
     <Center py={6}>
@@ -140,7 +113,7 @@ export default function BlogPost({ post, latest, ownerId, refetchBlogs, token })
                       <Button ref={cancelRef} onClick={onDeleteAlertClose}>
                         No
                       </Button>
-                      <Button colorScheme="red" ml={3} onClick={() => deleteBlog(post._id, token)}>
+                      <Button isLoading={deleteBlogStatus === "loading"} colorScheme="red" ml={3} onClick={() => deleteBlog(post._id)}>
                         Yes
                       </Button>
                     </AlertDialogFooter>
