@@ -5,23 +5,20 @@ import {Container, Center, Button} from '@chakra-ui/react'
 import ProfileHeader from './header/Profile'
 
 import styles from './layout.module.css'
-import useUser from '../lib/useUser'
-import { getToken } from '../lib/auth'
+import useUser from '../hooks/useUser'
 
 export const siteTitle = 'Blogs'
 
 export default function Layout({ children, home, profile }) {
   const router = useRouter()
-  // const {
-  //   isLoading: isUserLoading,
-  //   data: user
-  // } = useUser(profile);
-  const token = getToken()
-  const [getUserLoading, getUserError, user] = useUser(token)
+  const {
+    isLoading: isUserLoading,
+    data: user
+  } = useUser();
 
   const hasUserOnPage = user && !profile
   const displayHeaderBtn = hasUserOnPage 
-    ? <ProfileHeader profile={user} loading={getUserLoading} /> 
+    ? <ProfileHeader profile={user} loading={isUserLoading} /> 
     : !user && <Button onClick={() => router.push('/login')}>Login</Button>
 
   return (

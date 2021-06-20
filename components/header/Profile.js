@@ -8,7 +8,9 @@ import {logout} from '../../lib/auth'
 export default function ProfileHeader({ profile, loading }) {
   const queryClient = useQueryClient()
   const logoutUser = () => {
-    queryClient.invalidateQueries('user')
+    queryClient.resetQueries('user', {
+      exact: true
+    })
     logout()
   }
 
@@ -17,17 +19,6 @@ export default function ProfileHeader({ profile, loading }) {
   }
 
   if (loading) return <>Loading...</>
-
-  if (!profile) {
-    toast({
-      title: error.response.data.error,
-      description: "Please login.",
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-    })
-    router.push('/login')
-  }
 
   return (
     <Menu>

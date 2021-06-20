@@ -1,5 +1,6 @@
 import React from 'react'
 import { useQueryClient } from 'react-query'
+import nextCookies from 'next-cookies'
 import Layout from '../components/layout'
 import BlogPost from '../components/blog/Card'
 import {getToken} from '../lib/auth'
@@ -57,4 +58,20 @@ export default function Profile() {
       {renderBlogs}
     </Layout>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { token } = nextCookies(context)
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: {}
+  }
 }
