@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query'
-import { useRouter } from 'next/router'
-import { useToast } from '@chakra-ui/react'
+import { getToken } from '../lib/auth'
 import useApi from '../lib/axios'
 
 const getUser = async () => {
@@ -9,8 +8,9 @@ const getUser = async () => {
   return data
 }
 
-export default function useUser(atProfile) {
-  const router = useRouter()
-
-  return useQuery('user', getUser)
+export default function useUser() {
+  const token = getToken()
+  return useQuery('user', getUser, {
+    enabled: !!token
+  })
 }
