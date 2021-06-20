@@ -11,6 +11,6 @@ const getUser = async () => {
 export default function useUser() {
   const token = getToken()
   return useQuery('user', getUser, {
-    enabled: !!token
+    enabled: token ? true : false
   })
 }
